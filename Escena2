@@ -1,0 +1,76 @@
+
+class Escena2 extends Phaser.Scene{
+    constructor() {
+        super("juego");
+    }
+    
+    preload(){
+        this.load.image("fondo", "assets/lmd.jpg");
+        this.load.image("alien", "assets/alien.png");
+        this.load.image("asteroide", "assets/asteroide.png");
+        this.load.image("plataforma", "assets/plataforma.png");
+        this.load.image("cubo", "assets/cubo.png");
+    }
+    
+    create() {
+        this.background = this.add.tileSprite(0,0, config.width,
+                config.height, "fondo");
+        this.background.setOrigin(0,0);
+        this.plataforma = this.add.image(
+                config.width/2, config.height/2, "plataforma");
+        //this.cubo = this.add.image(
+          //      config.width/2, config.height/2-36, "cubo");
+        
+        this.add.text(20, 20, "Jugando", {font:"25px Arial", fill: "orange"});
+        
+        this.cubo = this.physics.add.sprite(50, config.height/2-36, "cubo");
+        this.cubo.setCollideWorldBounds(true);
+        
+        this.cursors = this.input.keyboard.createCursorKeys();
+        
+    }
+    
+    update() {
+        this.background.tilePositionY += 0;
+        if(vel <= 10) {
+            vel += 0.01;
+        }
+        if(flipflop){
+            if (this.cursors.left.isDown){
+                    flipflop = false;
+                    if(this.cubo.x >= 50){
+                        this.physics.moveTo(
+                                this.cubo, this.cubo.x-80, this.cubo.y, 60, 0.5);
+                    }
+                    
+
+            }else if (this.cursors.right.isDown){
+                    flipflop = false;
+                    if(this.cubo.x <= 450){
+                        this.physics.moveTo(
+                                this.cubo, this.cubo.x+80, this.cubo.y, 60, 0.5);
+                    }
+
+            }
+        }
+        /* if(this.cursors.right.isUp && this.cursors.left.isUp){
+            flipflop=true;
+        } */
+    }
+    
+    /* function () {
+        if(dir === "izq"){
+            if(this.cubo.getPositionX() !== 50){
+                //target = new Phaser.Math.Vector2();
+                //target.y=this.cubo.getPositionY;
+                this.cubo.x -= 80;
+            }
+        }else if(dir === "der"){
+            if(this.cubo.getPositionX() !== 450){
+                //target = new Phaser.Math.Vector2();
+                //target.y=this.cubo.getPositionY;
+                this.cubo.x += 80;
+            }
+        }
+    } */
+}
