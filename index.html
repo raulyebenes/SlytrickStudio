@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>Cube Drop</title>
+        <script type="text/javascript" src="phaser.min.js"></script>
+        <script type="text/javascript" src="game.js"></script>
+        <script type="text/javascript" src="Escena1.js"></script>
+        <script type="text/javascript" src="Escena2.js"></script>
+    </head>
+    <body>
+        <script>
+            var config = {
+                width: ((80*6) + 20),
+                height: 800,
+                backgroundColor: 0x000000, 
+                scene: [Escena1, Escena2],
+                pixelart: true,
+                physics: {
+                    default: "arcade",
+                        arcade: {
+                            debug: false,
+                            gravity: { y: 300 },
+                        }
+                }
+            }
+            var vel = 1;
+            var flipflop = true;
+            var randomPlat;
+            var entra = false;
+            var arrayPlat = [];
+            
+            var cubo;
+            var cuboX;
+            var cuboY;
+            var nuevaX;
+            var lastPress; //Controla si ha ido a izquierda o derecha la ultima
+            // vez que se presionó. Es true para izquierda y false para derecha.
+            
+            function crear_plataforma(){}
+        </script>
+    </body>
+</html>
