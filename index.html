@@ -9,7 +9,8 @@
     </head>
     <body>
         <script>
-            var config= {
+            var gravedad = 500;
+            var config = {
                 width: ((80*6) + 20),
                 height: 800,
                 backgroundColor: 0x000000, 
@@ -18,12 +19,27 @@
                 physics: {
                     default: "arcade",
                         arcade: {
-                            debug: false
+                            debug: false,
+                            //gravity: { y: gravedad },
                         }
                 }
             }
             var vel = 1;
             var flipflop = true;
+            var randomPlat;
+            var entra = false;
+            var arrayPlat = [];
+            
+            var cubo;
+            var cuboX;
+            var cuboY;
+            var nuevaX;
+            var lastPress; //Controla si ha ido a izquierda o derecha la ultima
+            // vez que se presionó. Es true para izquierda y false para derecha.
+            
+            var plat;
+            var plataf;
+            var carril = [50, 130, 210, 290, 380, 460];
         </script>
     </body>
 </html>
