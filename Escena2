@@ -6,8 +6,6 @@ class Escena2 extends Phaser.Scene{
     
     preload(){
         this.load.image("fondo", "assets/ventana.png");
-        //this.load.image("alien", "assets/alien.png");
-        //this.load.image("asteroide", "assets/asteroide.png");
         this.load.image("plataforma", "assets/plataforma.png");
         this.load.image("plat_muelle", "assets/plat_muelle.png");
         this.load.image("plat_pegajoso", "assets/plat_pegajoso.png");
@@ -16,51 +14,13 @@ class Escena2 extends Phaser.Scene{
     }
     
     create() {
-        /*randomPlat = Math.floor((Math.random() * 4));
-        arrayPlat = ["plataforma", "plat_muelle", "plat_pegajoso", "plat_pinchos"];
-        switch(randomPlat){
-            case 0:
-                this.plataforma = this.add.image(
-                config.width/2, config.height/2, "plataforma");
-                entra = true;
-            break;
-            
-            case 1:
-                this.plataforma = this.add.image(
-                config.width/2, config.height/2, "plat_muelle");
-        entra = true;
-            break;
-            
-            case 2:
-                this.plataforma = this.add.image(
-                config.width/2, config.height/2, "plat_pegajoso");
-            entra = true;
-                break;
-            
-            case 3:
-                this.plataforma = this.add.image(
-                config.width/2, config.height/2, "plat_pinchos");
-            entra = true;
-                break;
         
-        }*/
              
         this.background = this.add.tileSprite(0,0, config.width,
                 config.height, "fondo");
         this.background.setOrigin(0,0);
         
-        /*this.plataforma = this.add.image(
-                config.width/2, config.height/2, arrayPlat[0]);
-        this.plataforma = this.add.image(
-                config.width/2+50, config.height/2, arrayPlat[1]);
-        this.plataforma = this.add.image(
-                config.width/2+100, config.height/2, arrayPlat[2]);
-        this.plataforma = this.add.image(
-                config.width/2+150, config.height/2, arrayPlat[3]);
-        */
-       
-        //this.cubo = this.add.image(
-          //      config.width/2, config.height/2-36, "cubo");
+        plat = this.physics.add.group();
         
         this.add.text(20, 20, "Probando cositas guapis", {font:"25px Arial Black", fill: "black"});
         
@@ -70,48 +30,7 @@ class Escena2 extends Phaser.Scene{
         this.cursors = this.input.keyboard.createCursorKeys();
         
     }
-    
-    crear_plataforma(){
-                randomPlat = Math.floor((Math.random() * 4));
-                arrayPlat = ["plataforma", "plat_muelle", "plat_pegajoso", "plat_pinchos"];
-                /*switch(randomPlat){
-                    case 0:
-                        this.plataforma = this.add.image(
-                        config.width/2, config.height/2, "plataforma");
-                entra = true;
-                    break;
-
-                    case 1:
-                        this.plataforma = this.add.image(
-                        config.width/2, config.height/2, "plat_muelle");
-                entra = true;
-                    break;
-
-                    case 2:
-                        this.plataforma = this.add.image(
-                        config.width/2, config.height/2, "plat_pegajoso");
-                entra = true;
-                        break;
-
-                    case 3:
-                        this.plataforma = this.add.image(
-                        config.width/2, config.height/2, "plat_pinchos");
-                entra = true;
-                        break;
-
-                }*/
-        this.plataforma = this.add.image(
-                config.width/2, config.height/2, arrayPlat[0]);
-        this.plataforma = this.add.image(
-                config.width/2+50, config.height/2, arrayPlat[1]);
-        this.plataforma = this.add.image(
-                config.width/2+100, config.height/2, arrayPlat[2]);
-        this.plataforma = this.add.image(
-                config.width/2+150, config.height/2, arrayPlat[3]);
-       
-    }
-    
-            
+               
     update() {
         this.background.tilePositionY += 0;
         if(vel <= 10) {
@@ -122,25 +41,19 @@ class Escena2 extends Phaser.Scene{
         if(flipflop){
             if (this.cursors.left.isDown){
                     flipflop = false;
-                    crear_plataforma();
+                    crearPlataforma();
                     lastPress= true;
                     if(cubo.x > 50){
                         nuevaX = cuboX-80;
-                        ////this.cubo.x -= 1;
-                        //this.cubo.moveTo(this.cubo.x-80, this.cubo.y);
                         this.physics.moveTo(
                                 cubo, cuboX-80, cuboY, 80, 100);
                     }
-                    
-
             }else if (this.cursors.right.isDown){
                     flipflop = false;
-                    crear_plataforma();
+                    crearPlataforma();
                     lastPress= false;
                     if(cubo.x < 450){
                         nuevaX = cuboX+80;
-                        ////this.cubo.x += 1;
-                        //this.cubo.moveTo(this.cubo.x+80, this.cubo.y);
                         this.physics.moveTo(
                                 cubo, cuboX+80, cuboY, 80, 100);
                     }
@@ -163,21 +76,34 @@ class Escena2 extends Phaser.Scene{
         } 
     }
     
-    
-    
-    /* function () {
-        if(dir === "izq"){
-            if(this.cubo.getPositionX() !== 50){
-                //target = new Phaser.Math.Vector2();
-                //target.y=this.cubo.getPositionY;
-                this.cubo.x -= 80;
-            }
-        }else if(dir === "der"){
-            if(this.cubo.getPositionX() !== 450){
-                //target = new Phaser.Math.Vector2();
-                //target.y=this.cubo.getPositionY;
-                this.cubo.x += 80;
-            }
+}
+
+function crearPlataforma(){
+        randomPlat = Math.floor((Math.random() * 4));
+        arrayPlat = ["plataforma", "plat_muelle", "plat_pegajoso", "plat_pinchos"];
+        switch(randomPlat){
+            case 0:
+                var plataforma = plat.create(
+                config.width/2, config.height/2,  "plataforma");
+                entra = true;
+            break;
+            
+            case 1:
+                var plataforma = plat.create(
+                config.width/2, config.height/2, "plat_muelle");
+                entra = true;
+            break;
+            case 2:
+                var plataforma = plat.create(
+                config.width/2, config.height/2,  "plat_pegajoso");
+                entra = true;
+                break;
+            
+            case 3:
+                var plataforma = plat.create(
+                config.width/2, config.height/2,  "plat_pinchos");
+                entra = true;
+                break;
+        
         }
-    } */
 }
