@@ -1,76 +1,118 @@
 
+
 class Escena2 extends Phaser.Scene{
     constructor() {
         super("juego");
+        
     }
     
     preload(){
-        this.load.image("fondo", "assets/lmd.jpg");
-        this.load.image("alien", "assets/alien.png");
-        this.load.image("asteroide", "assets/asteroide.png");
+        this.load.image("fondo", "assets/ventana.png");
         this.load.image("plataforma", "assets/plataforma.png");
+        this.load.image("plat_muelle", "assets/plat_muelle.png");
+        this.load.image("plat_pegajoso", "assets/plat_pegajoso.png");
+        this.load.image("plat_pinchos", "assets/plat_pinchos.png");
         this.load.image("cubo", "assets/cubo.png");
     }
     
     create() {
+        
+             
         this.background = this.add.tileSprite(0,0, config.width,
                 config.height, "fondo");
         this.background.setOrigin(0,0);
-        this.plataforma = this.add.image(
-                config.width/2, config.height/2, "plataforma");
-        //this.cubo = this.add.image(
-          //      config.width/2, config.height/2-36, "cubo");
         
-        this.add.text(20, 20, "Jugando", {font:"25px Arial", fill: "orange"});
+        this.add.text(20, 20, "Probando cositas guapis", {font:"25px Arial Black", fill: "black"});
         
-        this.cubo = this.physics.add.sprite(50, config.height/2-36, "cubo");
-        this.cubo.setCollideWorldBounds(true);
+        cubo = this.physics.add.sprite(50, 80, "cubo");
+        cubo.setCollideWorldBounds(true);
         
         this.cursors = this.input.keyboard.createCursorKeys();
         
+        plat = this.physics.add.staticGroup();
+        
+        plataf = this.physics.add.staticGroup({
+            key: 'plataforma',
+            repeat: 5,
+            setXY: { x: 50, y: 500, stepX: 80 }
+        });
+
+        plataf.children.iterate(function (child) {
+
+            //child.body.allowGravity = false;
+            child.moveTo();
+
+        });
+        
+        plat.create(carril[0], 151,  "plataforma");
+        plat.create(carril[1], 231,  "plataforma");
+        plat.create(carril[2], 231,  "plataforma");
+        
+        this.physics.add.collider(cubo, plat);
+        this.physics.add.collider(cubo, plataf);
     }
-    
+               
     update() {
         this.background.tilePositionY += 0;
         if(vel <= 10) {
             vel += 0.01;
         }
+        
+        cuboX = cubo.x;
+        cuboY = cubo.y;
         if(flipflop){
             if (this.cursors.left.isDown){
                     flipflop = false;
-                    if(this.cubo.x >= 50){
-                        this.physics.moveTo(
-                                this.cubo, this.cubo.x-80, this.cubo.y, 60, 0.5);
+                    lastPress= true;
+                    if(cubo.x > 50){
+                        nuevaX = cuboX-80;
+                        cubo.setVelocityX(-1000);
                     }
-                    
-
             }else if (this.cursors.right.isDown){
                     flipflop = false;
-                    if(this.cubo.x <= 450){
-                        this.physics.moveTo(
-                                this.cubo, this.cubo.x+80, this.cubo.y, 60, 0.5);
+                    lastPress= false;
+                    if(cubo.x < 450){
+                        nuevaX = cuboX+80;
+                        cubo.setVelocityX(1000);
                     }
-
             }
         }
-        /* if(this.cursors.right.isUp && this.cursors.left.isUp){
+        if(lastPress){
+                if(nuevaX >= cuboX){
+                    cubo.setVelocityX(0);
+                    cubo.x = nuevaX;
+                }
+        }
+        if(!lastPress) {
+            if(nuevaX <= cuboX){
+                cubo.setVelocityX(0);
+                cubo.x = nuevaX;
+            }
+        }
+        if(this.cursors.right.isUp && this.cursors.left.isUp){
             flipflop=true;
-        } */
+        } 
     }
     
-    /* function () {
-        if(dir === "izq"){
-            if(this.cubo.getPositionX() !== 50){
-                //target = new Phaser.Math.Vector2();
-                //target.y=this.cubo.getPositionY;
-                this.cubo.x -= 80;
-            }
-        }else if(dir === "der"){
-            if(this.cubo.getPositionX() !== 450){
-                //target = new Phaser.Math.Vector2();
-                //target.y=this.cubo.getPositionY;
-                this.cubo.x += 80;
-            }
-        }
-    } */
 }
+
+function crearPlataforma(){
+        randomPlat = Math.floor((Math.random() * 4));
+        arrayPlat = ["plataforma", "plat_muelle", "plat_pegajoso", "plat_pinchos"];
+        
+        stars = this.physics.add.group({
+            key: 'star',
+            repeat: 11,
+            setXY: { x: 12, y: 0, stepX: 70 }
+        });
+
+        stars.children.iterate(function (child) {
+
+            //  Give each star a slightly different bounce
+            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+            child.body.allowGravity = false;
+            child.setVelocityY(10);
+
+        });
+}
+
