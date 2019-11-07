@@ -1,5 +1,5 @@
 
-
+var velY = -1;
 class Escena2 extends Phaser.Scene{
     constructor() {
         super("juego");
@@ -29,27 +29,36 @@ class Escena2 extends Phaser.Scene{
         
         this.cursors = this.input.keyboard.createCursorKeys();
         
-        plat = this.physics.add.staticGroup();
+        //plat = this.physics.add.staticGroup();
         
-        plataf = this.physics.add.staticGroup({
-            key: 'plataforma',
-            repeat: 5,
-            setXY: { x: 50, y: 500, stepX: 80 }
-        });
+        plat = this.physics.add.image(carril[2], 500, 'plataforma')
+            .setImmovable(true)
+            .setVelocity(0, 0);
+        plat.body.setAllowGravity(false);
+        
+        plataf = this.physics.add.group();
+        plataf.create(carril[0], 151, "plataforma");
+        plataf.create(carril[1], 400, "plataforma");
+        plataf.create(carril[2], 400, "plataforma");
 
         plataf.children.iterate(function (child) {
-
-            //child.body.allowGravity = false;
-            child.moveTo();
-
+            child.body.setAllowGravity(false);
+            child.body.setImmovable(true);
+            child.setVelocity(0,-30);
         });
         
-        plat.create(carril[0], 151,  "plataforma");
-        plat.create(carril[1], 231,  "plataforma");
-        plat.create(carril[2], 231,  "plataforma");
+        destruir =  this.physics.add.image(carril[2], 200, 'plat_pegajoso')
+            .setImmovable(true)
+        destruir.body.setAllowGravity(false);
+        
+        //plat.create(carril[0], 151,  "plataforma");
+        //plat.create(carril[1], 231,  "plataforma");
+        //plat.create(carril[2], 231,  "plataforma");
         
         this.physics.add.collider(cubo, plat);
         this.physics.add.collider(cubo, plataf);
+        this.physics.add.overlap(plataf, destruir, eliminar(), null, this);
+        
     }
                
     update() {
@@ -57,7 +66,10 @@ class Escena2 extends Phaser.Scene{
         if(vel <= 10) {
             vel += 0.01;
         }
-        
+        /* plataf.children.iterate(function (child) {
+            child.setVelocity(0,velY);
+        });
+        velY--;*/
         cuboX = cubo.x;
         cuboY = cubo.y;
         if(flipflop){
@@ -96,23 +108,17 @@ class Escena2 extends Phaser.Scene{
     
 }
 
-function crearPlataforma(){
-        randomPlat = Math.floor((Math.random() * 4));
-        arrayPlat = ["plataforma", "plat_muelle", "plat_pegajoso", "plat_pinchos"];
-        
-        stars = this.physics.add.group({
-            key: 'star',
-            repeat: 11,
-            setXY: { x: 12, y: 0, stepX: 70 }
-        });
-
-        stars.children.iterate(function (child) {
-
-            //  Give each star a slightly different bounce
-            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-            child.body.allowGravity = false;
-            child.setVelocityY(10);
-
-        });
+function eliminar(){
+    
 }
 
+function crearPlataforma(){
+        randomPlat = Math.floor((Math.random() * 5));
+        
+        switch(randomPlat){
+            case 0:
+                plataf.create(carril[0], 151, "plataforma");
+                plataf.create(carril[1], 800, "plataforma");
+                plataf.create(carril[2], 800, "plataforma");
+        }
+}
