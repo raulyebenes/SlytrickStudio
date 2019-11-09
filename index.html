@@ -8,6 +8,7 @@
     </head>
     <body>
         <script>
+            var gravedad = 1000;
             var config = {
                 width: ((80*6) + 20),
                 height: 800,
@@ -18,24 +19,34 @@
                     default: "arcade",
                         arcade: {
                             debug: false,
-                            gravity: { y: 300 },
+                            gravity: { y: gravedad },
                         }
                 }
             }
+            var game;
+            var gameOver = false;
+            var cuboAzul;
+            var cuboRojo;
+            
             var vel = 1;
-            var flipflop = true;
+            var velY = -80;
             var randomPlat;
-            var entra = false;
-            var arrayPlat = [];
+            var menu = false;
             
-            var cubo;
-            var cuboX;
-            var cuboY;
-            var nuevaX;
-            var lastPress; //Controla si ha ido a izquierda o derecha la ultima
-            // vez que se presionó. Es true para izquierda y false para derecha.
+            var cuboR;
+            var cuboA;
             
-            var plat;
+            var platafInicioR;
+            var platafInicioA;
+            var plataf;
+            var platafMuerte;
+            var carril = [50, 130, 210, 290, 370, 450];
+            var distanciaFilas = 150;
+            var minDistance;
+            var platformDistance;
+            
+            var sierras;
+            var sierrasT;
         </script>
     </body>
 </html>
