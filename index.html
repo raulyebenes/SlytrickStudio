@@ -2,14 +2,14 @@
 <html>
     <head>
         <title>Cube Drop</title>
-        <script type="text/javascript" src="phaser.js"></script>
+        <script type="text/javascript" src="phaser.min.js"></script>
         <script type="text/javascript" src="game.js"></script>
         <script type="text/javascript" src="Escena1.js"></script>
         <script type="text/javascript" src="Escena2.js"></script>
     </head>
     <body>
         <script>
-            var gravedad = 500;
+            var gravedad = 1000;
             var config = {
                 width: ((80*6) + 20),
                 height: 800,
@@ -24,23 +24,37 @@
                         }
                 }
             }
+            var game;
+            var gameOver = false;
+            var cuboAzul;
+            var cuboRojo;
+            
             var vel = 1;
-            var flipflop = true;
+            var velY = -80;
             var randomPlat;
-            var entra = false;
-            var arrayPlat = [];
             
-            var cubo;
-            var cuboX;
-            var cuboY;
-            var nuevaX;
-            var lastPress; //Controla si ha ido a izquierda o derecha la ultima
+            var cuboR;
+            var cuboRX;
+            var nuevaRX;
+            var flipflopR = true;
+            var lastPressR; //Controla si ha ido a izquierda o derecha la ultima
             // vez que se presionó. Es true para izquierda y false para derecha.
+            //Mismas variables para el cubo Azul
+            var cuboA;
+            var cuboAX;
+            var nuevaAX;
+            var lastPressA;
+            var flipflopA = true;
             
-            var plat;
+            var plataformilla;
             var plataf;
-            var carril = [50, 130, 210, 290, 380, 460];
-            var destruir;
+            var platafMuerte;
+            var carril = [50, 130, 210, 290, 370, 450];
+            var distanciaFilas = 150;
+            var minDistance;
+            var platformDistance;
+            
+            var sierras;
         </script>
     </body>
 </html>
