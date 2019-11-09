@@ -1,0 +1,40 @@
+      
+      //meter en create
+      this.anims.create({
+            key: "animRojoDer",
+            frames: this.anims.generateFrameNumbers("cuboR", {start: 1}),
+            frameRate: 20,
+            repeat: 0
+        })
+        
+        this.anims.create({
+            key: "animRojoIzq",
+            frames: this.anims.generateFrameNumbers("cuboR", {start: 4, end: 0}),
+            frameRate: 20,
+            repeat: 0
+        })
+        
+        this.anims.create({
+            key: "animAzulDer",
+            frames: this.anims.generateFrameNumbers("cuboA", {start: 1}),
+            frameRate: 20,
+            repeat: 0
+        })
+        
+        this.anims.create({
+            key: "animAzulIzq",
+            frames: this.anims.generateFrameNumbers("cuboA", {start: 4, end: 0}),
+            frameRate: 20,
+            repeat: 0
+        })
+        
+        
+        
+       
+       //Meter en el if de movimiento
+        cuboR.play("animRojoIzq");
+        cuboR.play("animRojoDer");
+        
+        
+        cuboA.play("animAzulIzq");
+        cuboA.play("animAzulDer");
