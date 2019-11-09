@@ -1,5 +1,5 @@
 
-var velY = -1;
+
 class Escena2 extends Phaser.Scene{
     constructor() {
         super("juego");
@@ -13,112 +13,155 @@ class Escena2 extends Phaser.Scene{
         this.load.image("plat_pegajoso", "assets/plat_pegajoso.png");
         this.load.image("plat_pinchos", "assets/plat_pinchos.png");
         this.load.image("cubo", "assets/cubo.png");
+        this.load.image("sierras", "assets/sierras.png");
+        this.load.spritesheet('cuboR', 'assets/cuboR.png', { frameWidth: 80, frameHeight: 80 });
+        this.load.spritesheet('cuboA', 'assets/cuboA.png', { frameWidth: 80, frameHeight: 80 });
     }
     
     create() {
         
-             
         this.background = this.add.tileSprite(0,0, config.width,
                 config.height, "fondo");
         this.background.setOrigin(0,0);
         
-        this.add.text(20, 20, "Probando cositas guapis", {font:"25px Arial Black", fill: "black"});
+        //this.add.text(20, 20, "Probando cositas guapis", {font:"25px Arial Black", fill: "black"});
         
-        cubo = this.physics.add.sprite(50, 80, "cubo");
-        cubo.setCollideWorldBounds(true);
+        cuboR = this.physics.add.sprite(carril[0], 150, "cuboR");
+        cuboR.setCollideWorldBounds(true);
+        sierras = this.physics.add.sprite(250, 775, "sierras");
+        sierras.body.setImmovable(true);
+        sierras.body.setAllowGravity(false);
         
         this.cursors = this.input.keyboard.createCursorKeys();
+        this.teclaA = this.input.keyboard.addKey('A');
+        this.teclaD = this.input.keyboard.addKey('D');
         
-        //plat = this.physics.add.staticGroup();
-        
-        plat = this.physics.add.image(carril[2], 500, 'plataforma')
+        plataformilla = this.physics.add.image(carril[0], 200, 'plataforma')
             .setImmovable(true)
             .setVelocity(0, 0);
-        plat.body.setAllowGravity(false);
+        plataformilla.body.setAllowGravity(false);
+        plataf = this.add.group();
+        platafMuerte = this.add.group();
+        this.crearFila();
         
-        plataf = this.physics.add.group();
-        plataf.create(carril[0], 151, "plataforma");
-        plataf.create(carril[1], 400, "plataforma");
-        plataf.create(carril[2], 400, "plataforma");
-
-        plataf.children.iterate(function (child) {
-            child.body.setAllowGravity(false);
-            child.body.setImmovable(true);
-            child.setVelocity(0,-30);
-        });
-        
-        destruir =  this.physics.add.image(carril[2], 200, 'plat_pegajoso')
-            .setImmovable(true)
-        destruir.body.setAllowGravity(false);
-        
-        //plat.create(carril[0], 151,  "plataforma");
-        //plat.create(carril[1], 231,  "plataforma");
-        //plat.create(carril[2], 231,  "plataforma");
-        
-        this.physics.add.collider(cubo, plat);
-        this.physics.add.collider(cubo, plataf);
-        this.physics.add.overlap(plataf, destruir, eliminar(), null, this);
+        this.physics.add.collider(cuboR, plataformilla);
+        this.physics.add.collider(cuboR, plataf);
+        this.physics.add.overlap(cuboR, platafMuerte, this.muerte, null, this);
+        this.physics.add.collider(cuboR, sierras, this.muertesierras, null, this);
         
     }
                
     update() {
         this.background.tilePositionY += 0;
-        if(vel <= 10) {
-            vel += 0.01;
+        
+        //Si te mueres se acaba
+        if (gameOver){return;}
+        
+        //Eliminar plataformas
+        minDistance = game.config.height;
+        plataf.getChildren().forEach(function(platform){
+            platformDistance = game.config.height - platform.y - platform.displayHeight / 2;
+            if(platformDistance < minDistance){
+                minDistance = platformDistance;
+            }
+            if(platform.y < - platform.displayHeight / 2){
+                plataf.killAndHide(platform);
+                plataf.remove(platform);
+            }
+        }, this);
+        platafMuerte.getChildren().forEach(function(platform){
+            platformDistance = game.config.height - platform.y - platform.displayHeight / 2;
+            if(platformDistance < minDistance){
+                minDistance = platformDistance;
+            }
+            if(platform.y < - platform.displayHeight / 2){
+                platafMuerte.killAndHide(platform);
+                platafMuerte.remove(platform);
+            }
+        }, this); 
+        //Añadir nuevas plataformas
+        if(minDistance > distanciaFilas){
+            this.crearFila();
         }
-        /* plataf.children.iterate(function (child) {
-            child.setVelocity(0,velY);
-        });
-        velY--;*/
-        cuboX = cubo.x;
-        cuboY = cubo.y;
-        if(flipflop){
+                    
+        cuboRX = cuboR.x;
+        if(flipflopR){
             if (this.cursors.left.isDown){
-                    flipflop = false;
-                    lastPress= true;
-                    if(cubo.x > 50){
-                        nuevaX = cuboX-80;
-                        cubo.setVelocityX(-1000);
+                    flipflopR = false;
+                    lastPressR= true;
+                    if(cuboR.x > 50){
+                        nuevaRX = cuboRX-80;
+                        cuboR.setVelocityX(-1000);
                     }
             }else if (this.cursors.right.isDown){
-                    flipflop = false;
-                    lastPress= false;
-                    if(cubo.x < 450){
-                        nuevaX = cuboX+80;
-                        cubo.setVelocityX(1000);
+                    flipflopR = false;
+                    lastPressR= false;
+                    if(cuboR.x < 450){
+                        nuevaRX = cuboRX+80;
+                        cuboR.setVelocityX(1000);
                     }
             }
         }
-        if(lastPress){
-                if(nuevaX >= cuboX){
-                    cubo.setVelocityX(0);
-                    cubo.x = nuevaX;
+        if(lastPressR){
+                if(nuevaRX >= cuboRX){
+                    cuboR.setVelocityX(0);
+                    cuboR.x = nuevaRX;
                 }
         }
-        if(!lastPress) {
-            if(nuevaX <= cuboX){
-                cubo.setVelocityX(0);
-                cubo.x = nuevaX;
+        if(!lastPressR) {
+            if(nuevaRX <= cuboRX){
+                cuboR.setVelocityX(0);
+                cuboR.x = nuevaRX;
             }
         }
         if(this.cursors.right.isUp && this.cursors.left.isUp){
-            flipflop=true;
+            flipflopR=true;
         } 
     }
     
-}
-
-function eliminar(){
-    
-}
-
-function crearPlataforma(){
-        randomPlat = Math.floor((Math.random() * 5));
-        
-        switch(randomPlat){
-            case 0:
-                plataf.create(carril[0], 151, "plataforma");
-                plataf.create(carril[1], 800, "plataforma");
-                plataf.create(carril[2], 800, "plataforma");
+    crearFila(){
+        let platform;
+        let randomPlat = Math.floor((Math.random() * 6));
+        let cuantos = Math.floor((Math.random() * 4));
+        let pinchos = Math.floor((Math.random() * 31));
+        velY *= 1.01;
+        for(var i = 0; i < cuantos; i++){
+            let randomPlatP;
+            do{
+                randomPlatP = Math.floor((Math.random() * 6));
+            }while(randomPlat === randomPlatP);
+            randomPlat = randomPlatP;
+            platform = this.add.image(carril[randomPlat], 810, 'plataforma');
+            this.physics.add.existing(platform);
+            platform.body.setImmovable(true);
+            platform.body.setAllowGravity(false);
+            platform.body.setVelocityY(velY);
+            plataf.add(platform);
         }
+        if(pinchos < 10){
+            randomPlat = Math.floor((Math.random() * 6));
+            platform = this.add.image(carril[randomPlat], 804, 'plat_pinchos');
+            this.physics.add.existing(platform);
+            platform.body.setImmovable(true);
+            platform.body.setAllowGravity(false);
+            platform.body.setVelocityY(velY);
+            platafMuerte.add(platform);
+        }
+    }
+    
+    muerte(){
+        for(let i = 0; i < 6; i++){
+            if(cuboR.x === carril[i]){
+                this.physics.pause();
+                gameOver = true;
+            }
+        }
+    }
+    
+    muertesierras() {
+        this.physics.pause();
+        gameOver = true;
+    }
 }
+
+
